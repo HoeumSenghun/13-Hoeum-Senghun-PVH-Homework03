@@ -1,31 +1,18 @@
-abstract class StaffMember {
-    // fields
+public abstract class StaffMember {
     protected int id;
     protected String name;
     protected String address;
 
-    // constructor
-    public StaffMember (int id, String name, String address) {
+    public StaffMember(int id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
     }
 
-    // abstract method
     public abstract double pay();
 
-    // method toString
     @Override
     public String toString() {
-        return "StaffMember {id: " + id + ", name: " + name + ", address: " + address + "}";
+        return "ID: " + id + ", Name: " + name + ", Address: " + address;
     }
-
-    // getter setter
-    public int getId() { return id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
 }

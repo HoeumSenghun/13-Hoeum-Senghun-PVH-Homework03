@@ -1,16 +1,21 @@
-class SalariedEmployee extends StaffMember {
-    // fields
+public class SalariedEmployee extends StaffMember {
     private double salary;
     private double bonus;
 
-    // constructor
-    public SalariedEmployee ( int id, String name, String address, double salary, double bonus){
+    public SalariedEmployee(int id, String name, String address, double salary, double bonus) {
         super(id, name, address);
         this.salary = salary;
         this.bonus = bonus;
     }
 
-    // override to abstract method in superclass
+    public double getSalary() {
+        return salary;
+    }
+
+    public double getBonus() {
+        return bonus;
+    }
+
     @Override
     public double pay() {
         return salary + bonus;
@@ -18,6 +23,6 @@ class SalariedEmployee extends StaffMember {
 
     @Override
     public String toString() {
-        return super.toString() + "\nEmployee Salary: " + salary + "\nBonus: " + bonus;
+        return "Salaried Employee - " + super.toString() + ", Salary: " + salary + ", Bonus: " + bonus;
     }
 }

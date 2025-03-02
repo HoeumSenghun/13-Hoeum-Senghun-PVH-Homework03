@@ -1,35 +1,28 @@
-class HourlySalaryEmployee extends StaffMember {
-    // fields
-    private int hourWorked;
+public class HourlySalaryEmployee extends StaffMember {
+    private int hoursWorked;
     private double rate;
 
-    // constructor
-    public HourlySalaryEmployee (int id, String name, String address, int hourWorked, double rate){
+    public HourlySalaryEmployee(int id, String name, String address, int hoursWorked, double rate) {
         super(id, name, address);
-        this.hourWorked = hourWorked;
+        this.hoursWorked = hoursWorked;
         this.rate = rate;
     }
-    public int getHourWorked(){
-        return hourWorked;
+
+    public int getHoursWorked() {
+        return hoursWorked;
     }
-    public double getRate(){
+
+    public double getRate() {
         return rate;
     }
-    public void setHourWorked(int hourWorked){
-        this.hourWorked = hourWorked;
-    }
-    public void setRate(double rate){
-        this.rate = rate;
-    }
 
-    // override abstract method in superclass
     @Override
     public double pay() {
-        return hourWorked * rate;
+        return hoursWorked * rate;
     }
 
     @Override
-    public String toString(){
-        return super.toString() + "HourlyEmployee {hourWorked: " + hourWorked + ", rate: " + rate + "$}";
+    public String toString() {
+        return "Hourly Employee - " + super.toString() + ", Hours Worked: " + hoursWorked + ", Rate: " + rate;
     }
 }
