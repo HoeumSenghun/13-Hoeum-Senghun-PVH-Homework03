@@ -1,6 +1,17 @@
 public class Volunteer extends StaffMember {
-    public Volunteer(int id, String name, String address) {
+    private double salary;
+
+    public Volunteer(int id, String name, String address, double salary) {
         super(id, name, address);
+        this.salary = salary; // Missing assignment fixed
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public double getSalary() {
+        return salary;
     }
 
     @Override

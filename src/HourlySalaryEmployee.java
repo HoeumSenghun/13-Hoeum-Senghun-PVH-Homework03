@@ -9,11 +9,19 @@ public class HourlySalaryEmployee extends StaffMember {
     }
 
     public int getHoursWorked() {
-        return hoursWorked;
+        return this.hoursWorked;
     }
 
     public double getRate() {
         return rate;
+    }
+
+    public void setRate(double hourlyRate) {
+        this.rate = hourlyRate;
+    }
+
+    public void setHoursWorked(int hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 
     @Override

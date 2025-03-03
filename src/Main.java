@@ -16,9 +16,9 @@ public class Main {
         displayMenu(); // Display the menu table
 
         // Sample data
-        employees.add(new Volunteer(1, "Tina", "PP"));
+        employees.add(new Volunteer(1, "Tina", "PP", 0));
         employees.add(new HourlySalaryEmployee(3, "Sokha", "BTB", 60, 10.0));
-        employees.add(new Volunteer(4, "Lee", "SR"));
+        employees.add(new Volunteer(4, "Lee", "SR", 0));
         employees.add(new HourlySalaryEmployee(6, "Ka", "PV", 50, 10.0));
         employees.add(new SalariedEmployee(5, "Fy", "KT", 300.0, 20.0));
         employees.add(new SalariedEmployee(2, "Dana", "KPS", 300.0, 10.0));
@@ -95,12 +95,14 @@ public class Main {
 
             switch (type) {
                 case 1: // Volunteer
-                    employees.add(new Volunteer(newId, name, address));
+                    System.out.print("Enter Salary: ");
+                    double salary = scanner.nextDouble();
+                    employees.add(new Volunteer(newId, name, address, salary));
                     System.out.println("Volunteer added successfully!");
                     break;
                 case 2: // Salaried
                     System.out.print("Enter Salary: ");
-                    double salary = scanner.nextDouble();
+                    salary = scanner.nextDouble();
                     System.out.print("Enter Bonus: ");
                     double bonus = scanner.nextDouble();
                     employees.add(new SalariedEmployee(newId, name, address, salary, bonus));
@@ -124,32 +126,34 @@ public class Main {
         // Create a table with borders
         Table table = new Table(9, BorderStyle.UNICODE_BOX, ShownBorders.ALL);
         CellStyle style = new CellStyle(CellStyle.HorizontalAlign.center);
+
         // Add header
-        table.setColumnWidth(0,25,30);
-        table.setColumnWidth(1,8,15);
-        table.setColumnWidth(2,15,20);
-        table.setColumnWidth(3,10,15);
-        table.setColumnWidth(4,10,15);
-        table.setColumnWidth(5,10,15);
-        table.setColumnWidth(6,8,12);
-        table.setColumnWidth(7,8,12);
-        table.setColumnWidth(8,10,15);
+        table.setColumnWidth(0, 20, 30); // Type
+        table.setColumnWidth(1, 5, 10);  // ID
+        table.setColumnWidth(2, 15, 20); // Name
+        table.setColumnWidth(3, 15, 20); // Address
+        table.setColumnWidth(4, 10, 15); // Salary
+        table.setColumnWidth(5, 10, 15); // Bonus
+        table.setColumnWidth(6, 10, 15); // Hours
+        table.setColumnWidth(7, 10, 15); // Rate
+        table.setColumnWidth(8, 10, 15); // Pay
+
         table.addCell("Type", style);
         table.addCell("ID", style);
         table.addCell("Name", style);
         table.addCell("Address", style);
         table.addCell("Salary", style);
         table.addCell("Bonus", style);
-        table.addCell("Hour", style);
+        table.addCell("Hours", style);
         table.addCell("Rate", style);
         table.addCell("Pay", style);
 
         // Add employee rows
         for (StaffMember employee : employees) {
-            String type = employee.getClass().getSimpleName(); // Get employee type (e.g., Volunteer, SalariedEmployee)
+            String type = employee.getClass().getSimpleName(); // Get employee type
             String salary = "---";
             String bonus = "---";
-            String hour = "---";
+            String hours = "---";
             String rate = "---";
             double pay = employee.pay(); // Calculate payment using the pay() method
 
@@ -160,11 +164,10 @@ public class Main {
                 bonus = String.format("$%.2f", salaried.getBonus());
             } else if (employee instanceof HourlySalaryEmployee) {
                 HourlySalaryEmployee hourly = (HourlySalaryEmployee) employee;
-                hour = String.valueOf(hourly.getHoursWorked());
+                hours = String.valueOf(hourly.getHoursWorked());
                 rate = String.format("$%.2f", hourly.getRate());
             } else if (employee instanceof Volunteer) {
-                salary = "---";
-                bonus = "---";
+                salary = String.format("$%.2f", ((Volunteer) employee).getSalary());
             }
 
             // Add row to the table
@@ -174,7 +177,7 @@ public class Main {
             table.addCell(employee.address, style);
             table.addCell(salary, style);
             table.addCell(bonus, style);
-            table.addCell(hour, style);
+            table.addCell(hours, style);
             table.addCell(rate, style);
             table.addCell(String.format("$%.2f", pay), style);
         }
@@ -186,7 +189,7 @@ public class Main {
     private static void updateEmployee() {
         System.out.print("Enter Employee ID to update: ");
         int id = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Consume the newline character
 
         Optional<StaffMember> employeeOpt = employees.stream()
                 .filter(e -> e.id == id)
@@ -194,13 +197,86 @@ public class Main {
 
         if (employeeOpt.isPresent()) {
             StaffMember employee = employeeOpt.get();
-            System.out.print("Enter new Name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter new Address: ");
-            String address = scanner.nextLine();
-            employee.name = name;
-            employee.address = address;
-            System.out.println("Employee updated!");
+            System.out.println("Employee found: " + employee);
+
+            boolean exit = false;
+            while (!exit) {
+                System.out.println("\nChoose a field to update:");
+                System.out.println("1. Name");
+                System.out.println("2. Address");
+
+                if (employee instanceof Volunteer) {
+                    System.out.println("3. Salary");
+                } else if (employee instanceof SalariedEmployee) {
+                    System.out.println("3. Salary");
+                    System.out.println("4. Bonus");
+                } else if (employee instanceof HourlySalaryEmployee) {
+                    System.out.println("3. Hourly Rate");
+                    System.out.println("4. Hours Worked");
+                }
+
+                System.out.println("5. Exit");
+                System.out.print("Choose: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter new Name: ");
+                        String name = scanner.nextLine();
+                        employee.setName(name);
+                        System.out.println("Name updated!");
+                        break;
+                    case 2:
+                        System.out.print("Enter new Address: ");
+                        String address = scanner.nextLine();
+                        employee.setAddress(address);
+                        System.out.println("Address updated!");
+                        break;
+                    case 3:
+                        if (employee instanceof Volunteer) {
+                            System.out.print("Enter new Salary: ");
+                            double salary = scanner.nextDouble();
+                            scanner.nextLine();
+                            ((Volunteer) employee).setSalary(salary);
+                            System.out.println("Salary updated!");
+                        } else if (employee instanceof SalariedEmployee) {
+                            System.out.print("Enter new Salary: ");
+                            double salary = scanner.nextDouble();
+                            scanner.nextLine();
+                            ((SalariedEmployee) employee).setSalary(salary);
+                            System.out.println("Salary updated!");
+                        } else if (employee instanceof HourlySalaryEmployee) {
+                            System.out.print("Enter new Hourly Rate: ");
+                            double hourlyRate = scanner.nextDouble();
+                            scanner.nextLine();
+                            ((HourlySalaryEmployee) employee).setRate(hourlyRate);
+                            System.out.println("Hourly Rate updated!");
+                        }
+                        break;
+                    case 4:
+                        if (employee instanceof SalariedEmployee) {
+                            System.out.print("Enter new Bonus: ");
+                            double bonus = scanner.nextDouble();
+                            scanner.nextLine();
+                            ((SalariedEmployee) employee).setBonus(bonus);
+                            System.out.println("Bonus updated!");
+                        } else if (employee instanceof HourlySalaryEmployee) {
+                            System.out.print("Enter new Hours Worked: ");
+                            int hoursWorked = scanner.nextInt();
+                            scanner.nextLine();
+                            ((HourlySalaryEmployee) employee).setHoursWorked(hoursWorked);
+                            System.out.println("Hours Worked updated!");
+                        }
+                        break;
+                    case 5:
+                        exit = true;
+                        System.out.println("Exiting update menu.");
+                        break;
+                    default:
+                        System.out.println("Invalid choice! Please try again.");
+                }
+            }
         } else {
             System.out.println("Employee not found!");
         }
